@@ -161,7 +161,7 @@ def main():
                             family = data["last_name"]
                             mes_text = f"Да ты бомба)\n"
                             mes_text += f" {name} {family}, на твоем счету {user.get_clicks(user_id)} копеек\n"
-                            mes_text += '\nКстати пошел нахуй👍'
+
                             vk.messages.send(user_id=user_id,
                                              random_id=get_random_id(),
                                              message=mes_text)
