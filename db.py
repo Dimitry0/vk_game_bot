@@ -38,12 +38,23 @@ class UsersInfo:
         values = db.fetchone()
         return values[0]
 
-    def update(user_vk_id, clicks):
+    def update_clicks(user_vk_id, clicks):
         db.execute(f"UPDATE 'userss' SET clicks = {clicks} WHERE vk_id = {user_vk_id}")
         con.commit()
+
+    def update_stavka(user_vk_id, stavka):
+        db.execute(f"UPDATE 'userss' SET stavka = {stavka} WHERE vk_id = {user_vk_id}")
+
+        con.commit()
+
 
     def get_top(count):
         db.execute(f"SELECT vk_id, clicks FROM 'userss' ORDER BY clicks DESC LIMIT {count}")
         con.commit()
         values = db.fetchall()
         return values
+    def get_profile(user_id):
+        db.execute(f"SELECT clicks FROM userss WHERE vk_id = {user_id}")
+        con.commit()
+        value = db.fetchall()
+        return value

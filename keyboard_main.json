@@ -1,0 +1,29 @@
+{
+  "one_time": false,
+  "buttons": [
+    [{
+      "action": {
+        "type": "text",
+        "label": "клик"
+      },
+      "color": "positive"
+    },
+
+      {
+      "action": {
+        "type": "text",
+        "label": "Азино 3 топора"
+      },
+      "color": "primary"
+    }],
+
+    [
+      {
+      "action": {
+        "type": "text",
+        "label": "Назад"
+      },
+      "color": "default"
+    }]
+  ]
+}
