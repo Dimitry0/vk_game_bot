@@ -51,7 +51,7 @@ def main():
                             point = randint(1, 3)
                             vk.messages.send(user_id=user_id,
                                             random_id=get_random_id(),
-                                            message=f"Вы кликнули и получили +{point} {'копейка' if point == 1 else 'копейки'} топа 💥")
+                                            message=f"Вы кликнули и получили +{point} {'копейку' if point == 1 else 'копейки'} 💥")
                             user.update_clicks(user_id, user.get_clicks(user_id) + point)
 
             # клавиатура 1_1
@@ -72,14 +72,14 @@ def main():
                                                  keyboard=open('casino_key.json', 'r', encoding='UTF-8').read(),
                                                  message=mes_text)
                         elif text.isdigit():
-                            if 1 <= int(text) <= user.get_clicks(user_id):
+                            if 5 <= int(text) <= user.get_clicks(user_id):
                                 user.update_stavka(user_id, int(text))
                                 mes_text = f"Ставка принята✅"
                                 vk.messages.send(user_id=user_id,
                                                  random_id=get_random_id(),
                                                  keyboard=open('casino_key.json', 'r', encoding='UTF-8').read(),
                                                  message=mes_text)
-                            elif 1 >= int(text):
+                            elif 5 >= int(text):
                                 mes_text = f"Ставка слишком маленькая\n"
                                 vk.messages.send(user_id=user_id,
                                                  random_id=get_random_id(),
