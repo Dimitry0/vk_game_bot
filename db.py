@@ -42,9 +42,14 @@ class UsersInfo:
         db.execute(f"UPDATE 'userss' SET clicks = {clicks} WHERE vk_id = {user_vk_id}")
         con.commit()
 
+    def get_stavka(user_vk_id):
+        db.execute(f"SELECT stavka FROM 'userss' WHERE vk_id= '{user_vk_id}'")
+        con.commit()
+        values = db.fetchone()
+        return values[0]
+
     def update_stavka(user_vk_id, stavka):
         db.execute(f"UPDATE 'userss' SET stavka = {stavka} WHERE vk_id = {user_vk_id}")
-
         con.commit()
 
 

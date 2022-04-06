@@ -57,64 +57,115 @@ def main():
             # клавиатура 1_1
 
                         elif text.lower() == "азино 3 топора" or text == "Азино 3 топора":
-                            vk.messages.send(user_id=user_id,
-                                             random_id=get_random_id(),
-                                             keyboard=open('casino_key.json', 'r', encoding='UTF-8').read(),
-                                             message="казино клава отправлена "
-                                                     "СТАВКА 10 копеек")
+                            if user.get_stavka(user_id) > user.get_clicks(user_id):
+                                mes_text = f"У вас не хватает денег\n"
+                                mes_text += f"Зарабатывай на кликах\n"
+                                vk.messages.send(user_id=user_id,
+                                                 random_id=get_random_id(),
+                                                 keyboard=open('keyboard_main.json', 'r', encoding='UTF-8').read(),
+                                                 message=mes_text)
+                            else:
+                                mes_text = f"Приветствуем вас в казино\n"
+                                mes_text += f"НАЧАЛЬНАЯ СТАВКА 5 КОПЕЕК"
+                                vk.messages.send(user_id=user_id,
+                                                 random_id=get_random_id(),
+                                                 keyboard=open('casino_key.json', 'r', encoding='UTF-8').read(),
+                                                 message=mes_text)
+                        elif text.isdigit():
+                            if 1 <= int(text) <= user.get_clicks(user_id):
+                                user.update_stavka(user_id, int(text))
+                                mes_text = f"Ставка принята✅"
+                                vk.messages.send(user_id=user_id,
+                                                 random_id=get_random_id(),
+                                                 keyboard=open('casino_key.json', 'r', encoding='UTF-8').read(),
+                                                 message=mes_text)
+                            elif 1 >= int(text):
+                                mes_text = f"Ставка слишком маленькая\n"
+                                vk.messages.send(user_id=user_id,
+                                                 random_id=get_random_id(),
+                                                 keyboard=open('keyboard_main.json', 'r', encoding='UTF-8').read(),
+                                                 message=mes_text)
+                            elif int(text) >= user.get_clicks(user_id):
+                                mes_text = f"У вас не хватает денег на ставку\n"
+                                vk.messages.send(user_id=user_id,
+                                                 random_id=get_random_id(),
+                                                 keyboard=open('keyboard_main.json', 'r', encoding='UTF-8').read(),
+                                                 message=mes_text)
 
                         elif text.lower() == "2x--черное" or text == "2X--черное":
-                            cas = choice(casino_items)
-                            if cas == 0:
-                                mes_text =f"Вы выиграли +20 копеек!✅\n"
-                                mes_text += f"На вашем счету {user.get_clicks(user_id) + 20} копеек. 👍🏻\n"
-                                vk.messages.send(user_id=user_id,
-                                                 random_id=get_random_id(),
-                                                 message=mes_text)
-                                user.update_clicks(user_id, user.get_clicks(user_id) + 20)
+                            if user.get_stavka(user_id) <= user.get_clicks(user_id):
+                                cas = choice(casino_items)
+                                if cas == 0:
+                                    mes_text =f"Вы выиграли +{user.get_stavka(user_id)} копеек!✅\n"
+                                    mes_text += f"На вашем счету {user.get_clicks(user_id) + user.get_stavka(user_id)} копеек. 👍🏻\n"
+                                    vk.messages.send(user_id=user_id,
+                                                     random_id=get_random_id(),
+                                                     message=mes_text)
+                                    user.update_clicks(user_id, user.get_clicks(user_id) + user.get_stavka(user_id))
+                                else:
+                                    mes_text = f"Вы просрали -{user.get_stavka(user_id)} копеек!❌\n"
+                                    mes_text += f"На вашем счету {user.get_clicks(user_id) - user.get_stavka(user_id)} копеек. 👍🏻\n"
+                                    vk.messages.send(user_id=user_id,
+                                                     random_id=get_random_id(),
+                                                     message=mes_text)
+                                    user.update_clicks(user_id, user.get_clicks(user_id) - user.get_stavka(user_id))
                             else:
-                                mes_text = f"Вы просрали -10 копеек!❌\n"
-                                mes_text += f"На вашем счету {user.get_clicks(user_id) - 10} копеек. 👍🏻\n"
+                                mes_text = f"Недостаточно средств для ставки\n"
+                                mes_text += f"Попробуйте уменьшить ставку или заработать на кликах"
                                 vk.messages.send(user_id=user_id,
                                                  random_id=get_random_id(),
                                                  message=mes_text)
-                                user.update_clicks(user_id, user.get_clicks(user_id) - 10)
 
                         elif text.lower() == "2x--красное" or text == "2X--красное":
-                            cas = choice(casino_items)
-                            if cas == 1:
-                                mes_text = f"Вы выиграли +20 копеек!✅\n"
-                                mes_text += f"На вашем счету {user.get_clicks(user_id) + 20} копеек. 👍🏻\n"
-                                vk.messages.send(user_id=user_id,
-                                                 random_id=get_random_id(),
-                                                 message=mes_text)
-                                user.update_clicks(user_id, user.get_clicks(user_id) + 20)
+                            if user.get_stavka(user_id) <= user.get_clicks(user_id):
+                                cas = choice(casino_items)
+                                if cas == 1:
+                                    mes_text = f"Вы выиграли +{user.get_stavka(user_id)} копеек!✅\n"
+                                    mes_text += f"На вашем счету {user.get_clicks(user_id) + user.get_stavka(user_id)} копеек. 👍🏻\n"
+                                    vk.messages.send(user_id=user_id,
+                                                     random_id=get_random_id(),
+                                                     message=mes_text)
+                                    user.update_clicks(user_id, user.get_clicks(user_id) + user.get_stavka(user_id))
+                                else:
+                                    mes_text = f"Вы просрали -{user.get_stavka(user_id)} копеек!❌\n"
+                                    mes_text += f"На вашем счету {user.get_clicks(user_id) - user.get_stavka(user_id)} копеек. 👍🏻\n"
+                                    vk.messages.send(user_id=user_id,
+                                                     random_id=get_random_id(),
+                                                     message=mes_text)
+                                    user.update_clicks(user_id, user.get_clicks(user_id) - user.get_stavka(user_id))
                             else:
-                                mes_text = f"Вы просрали -10 копеек!❌\n"
-                                mes_text += f"На вашем счету {user.get_clicks(user_id) - 10} копеек. 👍🏻\n"
+                                mes_text = f"Недостаточно средств для ставки\n"
+                                mes_text += f"Попробуйте уменьшить ставку или заработать на кликах"
                                 vk.messages.send(user_id=user_id,
                                                  random_id=get_random_id(),
                                                  message=mes_text)
-                                user.update_clicks(user_id, user.get_clicks(user_id) - 10)
 
                         elif text.lower() == "10x--зеленое" or text == "10X--зеленое":
-                            cas = choice(casino_items)
-                            if cas == 2:
-                                mes_text = f"Вы выиграли +100 копеек!✅\n"
-                                mes_text += f"На вашем счету {user.get_clicks(user_id) + 100} копеек. 👍🏻\n"
-                                vk.messages.send(user_id=user_id,
-                                                 random_id=get_random_id(),
-                                                 message=mes_text)
-                                user.update_clicks(user_id, user.get_clicks(user_id) + 100)
+                            if user.get_stavka(user_id) <= user.get_clicks(user_id):
+                                cas = choice(casino_items)
+                                if cas == 2:
+                                    mes_text = f"Вы выиграли +{user.get_stavka(user_id) * 10} копеек!✅\n"
+                                    mes_text += f"На вашем счету {user.get_clicks(user_id) + user.get_stavka(user_id) * 10} копеек. 👍🏻\n"
+                                    vk.messages.send(user_id=user_id,
+                                                     random_id=get_random_id(),
+                                                     message=mes_text)
+                                    user.update_clicks(user_id, user.get_clicks(user_id) + user.get_stavka(user_id) * 10)
+                                else:
+                                    mes_text = f"Вы просрали -{user.get_stavka(user_id)} копеек!❌\n"
+                                    mes_text += f"На вашем счету {user.get_clicks(user_id) - user.get_stavka(user_id)} копеек. 👍🏻\n"
+                                    vk.messages.send(user_id=user_id,
+                                                     random_id=get_random_id(),
+                                                     message=mes_text)
+                                    user.update_clicks(user_id, user.get_clicks(user_id) - user.get_stavka(user_id))
                             else:
-                                mes_text = f"Вы просрали -10 копеек!❌\n"
-                                mes_text += f"На вашем счету {user.get_clicks(user_id) - 10} копеек. 👍🏻\n"
+                                mes_text = f"Недостаточно средств для ставки\n"
+                                mes_text += f"Попробуйте уменьшить ставку или заработать на кликах"
                                 vk.messages.send(user_id=user_id,
                                                  random_id=get_random_id(),
                                                  message=mes_text)
-                                user.update_clicks(user_id, user.get_clicks(user_id) - 10)
 
                         elif text.lower() == "baby back, hey!)" or text == "Baby back, hey!)":
+                            user.update_stavka(user_id, 5)
                             vk.messages.send(user_id=user_id,
                                              random_id=get_random_id(),
                                              keyboard=open('keyboard_main.json', 'r', encoding='UTF-8').read(),
@@ -169,6 +220,7 @@ def main():
 
 
                         else:
+                            user.update_stavka(user_id, 5)
                             vk.messages.send(user_id=user_id,
                                              random_id=get_random_id(),
                                              keyboard=open('keyboard_main1.json', 'r', encoding='UTF-8').read(),
